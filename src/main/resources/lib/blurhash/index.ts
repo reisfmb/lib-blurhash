@@ -16,7 +16,7 @@ export type { BackfillSummary } from './backfill';
 export type { ProcessResult, ProcessStatus, DecodeOpts } from './xp';
 
 // Pure: usable without content, and the part that is unit-tested.
-export { encodeRgb, decodeRgb, encodeThumbnail, isValidHash } from './codec';
+export { encodeRgb, decodeRgb, encodeThumbnail, isValidHash, averageColor } from './codec';
 export { DEFAULT_COMPONENTS_X, DEFAULT_COMPONENTS_Y } from './codec';
 
 // Frozen at M6. `readThumbnail` and `settings.config()` are reachable by path for our own

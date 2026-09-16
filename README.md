@@ -134,7 +134,7 @@ missing placeholder is never the reason an editor cannot save.
 
 ## API
 
-Frozen for v1.
+Frozen for v1; `averageColor` added after the freeze (additive, pure).
 
 ```ts
 // XP
@@ -149,6 +149,7 @@ encodeRgb(pixels, width, height, componentsX?, componentsY?): string | null
 decodeRgb(hash, width, height, punch?): Uint8ClampedArray | null
 encodeThumbnail(raw, componentsX?, componentsY?): string | null
 isValidHash(value: unknown): value is string
+averageColor(hash: unknown): string | null     // '#rrggbb' from the hash's DC term; no pixels decoded
 DEFAULT_COMPONENTS_X, DEFAULT_COMPONENTS_Y
 
 // Types

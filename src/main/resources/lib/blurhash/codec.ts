@@ -11,7 +11,7 @@
  * XP-facing functions (encode/process/decode by content id) live in `xp.ts`.
  */
 
-import { encode as codecEncode, decode as codecDecode, isBlurhashValid } from './vendor';
+import { encode as codecEncode, decode as codecDecode, isBlurhashValid, decode83 } from './vendor';
 import {
   hasExpectedLength,
   isValidComponentCount,
@@ -90,6 +90,19 @@ export function isValidHash(hash: unknown): hash is string {
   } catch (e) {
     return false;
   }
+}
+
+/**
+ * The image's average colour, as `#rrggbb`, straight from the hash.
+ *
+ * Characters 2–5 of a BlurHash are the DC component: the mean colour, base83-encoded as
+ * 24-bit sRGB. No decoding of pixels is needed, so this is free to call per image and is the
+ * natural tint for borders, skeletons and card backgrounds while the real image loads.
+ */
+export function averageColor(hash: unknown): string | null {
+  if (!isValidHash(hash)) return null;
+  const rgb = decode83(hash.substring(2, 6));
+  return '#' + rgb.toString(16).padStart(6, '0');
 }
 
 /**

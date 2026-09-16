@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { decodeRgb, encodeRgb, isValidHash } from './codec';
+import { averageColor, decodeRgb, encodeRgb, isValidHash } from './codec';
 
 /** A solid block of one colour, RGBA, alpha opaque — what the bean hands us. */
 function solid(width: number, height: number, r: number, g: number, b: number): number[] {
@@ -119,5 +119,33 @@ describe('isValidHash', () => {
     ['an object', {}],
   ])('rejects %s', (_label, value) => {
     expect(isValidHash(value)).toBe(false);
+  });
+});
+
+describe('averageColor', () => {
+  function hex(r: number, g: number, b: number): string {
+    return '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('');
+  }
+
+  it('returns the colour of a flat image exactly', () => {
+    expect(averageColor(encodeRgb(solid(8, 8, 120, 80, 200), 8, 8))).toBe(hex(120, 80, 200));
+    expect(averageColor(encodeRgb(solid(8, 8, 0, 0, 0), 8, 8))).toBe(hex(0, 0, 0));
+    expect(averageColor(encodeRgb(solid(8, 8, 255, 255, 255), 8, 8))).toBe(hex(255, 255, 255));
+  });
+
+  it('is independent of the component count', () => {
+    const px = solid(8, 8, 33, 66, 99);
+    expect(averageColor(encodeRgb(px, 8, 8, 1, 1))).toBe(averageColor(encodeRgb(px, 8, 8, 9, 9)));
+  });
+
+  it('is always six hex digits', () => {
+    expect(averageColor(encodeRgb(solid(4, 4, 0, 0, 5), 4, 4))).toMatch(/^#[0-9a-f]{6}$/);
+  });
+
+  it('returns null for anything that is not a valid hash', () => {
+    expect(averageColor(null)).toBeNull();
+    expect(averageColor('')).toBeNull();
+    expect(averageColor('L' + '/'.repeat(27))).toBeNull();
+    expect(averageColor(42)).toBeNull();
   });
 });

@@ -7,3 +7,4 @@
 export { default as encode } from './encode';
 export { default as decode, isBlurhashValid } from './decode';
 export { ValidationError } from './error';
+export { decode83 } from './base83';
