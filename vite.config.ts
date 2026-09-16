@@ -4,7 +4,11 @@ import { defineConfig } from 'vite-plus';
 // CommonJS, mirroring the tree into build/ so XP runs each file in place.
 export default defineConfig({
   pack: {
-    entry: ['src/main/resources/**/*.ts', '!src/main/resources/**/*.d.ts'],
+    entry: [
+      'src/main/resources/**/*.ts',
+      '!src/main/resources/**/*.d.ts',
+      '!src/main/resources/**/*.test.ts', // tests run from source; they never ship
+    ],
     root: 'src/main/resources',
     outDir: 'build/resources/main',
     format: 'cjs' as const,

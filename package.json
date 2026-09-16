@@ -5,7 +5,8 @@
   "description": "BlurHash library for Enonic XP 8",
   "type": "module",
   "scripts": {
-    "pack:server": "vp pack"
+    "pack:server": "vp pack",
+    "test": "vp test"
   },
   "devDependencies": {
     "@enonic-types/core": "^8.0.4",
