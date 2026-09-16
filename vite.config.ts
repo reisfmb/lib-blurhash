@@ -3,6 +3,11 @@ import { defineConfig } from 'vite-plus';
 // `vp pack` (tsdown) compiles the server-side .ts under src/main/resources to per-file
 // CommonJS, mirroring the tree into build/ so XP runs each file in place.
 export default defineConfig({
+  // Scope discovery to the sources. An IDE copies resources to bin/main, and vitest was
+  // happily running those stale duplicates alongside the real ones — same count, twice.
+  test: {
+    include: ['src/main/resources/**/*.test.ts'],
+  },
   pack: {
     entry: [
       'src/main/resources/**/*.ts',

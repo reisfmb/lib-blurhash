@@ -23,6 +23,9 @@ importers:
       '@enonic-types/lib-context':
         specifier: ^8.0.4
         version: 8.0.4
+      '@enonic-types/lib-event':
+        specifier: ^8.0.4
+        version: 8.0.4
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -61,6 +64,9 @@ packages:
 
   '@enonic-types/lib-context@8.0.4':
     resolution: {integrity: sha512-5E6x4Ow4O9lE1UCYXgwcHytC6GsRbtzdXp7rxSufQxrsJLKvF4+XyQqA2Hws4cGl8RbZhm2gboSB/NfC5TugCw==}
+
+  '@enonic-types/lib-event@8.0.4':
+    resolution: {integrity: sha512-RBmAE/n3EOvrnru/RTvvYFWk0hjahO5rJBD8LycQkBO/Zg8Q5fKFh7dKZpPb9LwbXWPJfJSa6uJZFPsONb606Q==}
 
   '@jridgewell/sourcemap-codec@1.6.0':
     resolution: {integrity: sha512-T7jf+5zgsZHwNJ4lvQ7/aezbyk0nNX+zJVWpmHA7VYsEx7a7qr5Rg5IbtJFqkgze5Y2sruq1RUY8Q837Od7iFw==}
@@ -1129,6 +1135,8 @@ snapshots:
   '@enonic-types/lib-context@8.0.4':
     dependencies:
       '@enonic-types/core': 8.0.4
+
+  '@enonic-types/lib-event@8.0.4': {}
 
   '@jridgewell/sourcemap-codec@1.6.0': {}
 
