@@ -1,0 +1,5 @@
+[versions]
+node-gradle = "7.1.0"
+
+[plugins]
+node-gradle = { id = "com.github.node-gradle.node", version.ref = "node-gradle" }

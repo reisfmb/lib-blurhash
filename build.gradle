@@ -1,0 +1,78 @@
+import com.github.gradle.node.pnpm.task.PnpmInstallTask
+import com.github.gradle.node.pnpm.task.PnpmTask
+
+plugins {
+    // `java` is only here for jar/processResources/components.java — there are no Java sources.
+    id 'java'
+    id 'maven-publish'
+    id 'com.enonic.xp.base'
+    alias(libs.plugins.node.gradle)
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    xp.enonicRepo('dev')
+}
+
+// A JS library bundles nothing: XP libs are provided by the consuming app, and types
+// come from the @enonic-types npm packages.
+dependencies {
+}
+
+// Download + pin Node + pnpm so the build is self-contained (clean checkout / CI).
+node {
+    download = true
+    version = '24.18.0'
+    pnpmVersion = '10.33.4' // match packageManager in package.json
+}
+
+// pnpmInstall is auto-registered; freeze the lockfile in CI.
+tasks.named('pnpmInstall', PnpmInstallTask) {
+    if (System.getenv('CI') != null) {
+        args.add('--frozen-lockfile')
+    }
+}
+
+// Keep raw sources (and dev-only config) out of the jar — pnpmPack emits the compiled
+// versions into build/resources/main instead.
+tasks.named('processResources') {
+    exclude '**/*.ts' // server TS emitted as .js by pnpmPack
+    exclude '**/tsconfig.json' // type-check config, not a library resource
+    exclude '**/.gitkeep'
+    exclude '**/node_modules/**'
+    includeEmptyDirs = false
+}
+
+// Compile server-side .ts -> per-file CommonJS in build/resources/main (see vite.config pack).
+tasks.register('pnpmPack', PnpmTask) {
+    dependsOn tasks.named('pnpmInstall')
+    mustRunAfter tasks.named('processResources')
+    description = 'Build server-side resources (ts -> CommonJS js) with vp pack.'
+    group = 'build'
+    args = ['run', 'pack:server']
+    inputs.dir 'src/main'
+    inputs.file 'vite.config.ts'
+    inputs.file 'package.json'
+    outputs.dir layout.buildDirectory.dir('resources/main')
+    outputs.cacheIf { false } // output dir overlaps processResources — caching unreliable
+
+    // Required: vp pack runs clean:false, so without this a deleted .ts keeps shipping its .js.
+    doFirst {
+        delete fileTree(layout.buildDirectory.dir('resources/main')) {
+            include '**/*.js'
+        }
+    }
+}
+
+tasks.named('jar') {
+    dependsOn tasks.named('pnpmPack')
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}

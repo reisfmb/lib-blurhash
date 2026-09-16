@@ -1,0 +1,9 @@
+# `vite` is an alias onto vite-plus-core, so transitive ranges must not pull the real package.
+# `$name` keeps it on whatever package.json pins; the alias itself is bumped by hand.
+overrides:
+  vite: '$vite'
+peerDependencyRules:
+  allowAny:
+    - vite
+  allowedVersions:
+    vite: '*'
