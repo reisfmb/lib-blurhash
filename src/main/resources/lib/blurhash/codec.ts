@@ -20,9 +20,6 @@ import {
   toClamped,
 } from './pixels';
 
-export { readThumbnail } from './pixels';
-export type { Thumbnail } from './pixels';
-
 /**
  * The base83 alphabet, duplicated here on purpose.
  *
@@ -109,8 +106,4 @@ export function encodeThumbnail(
   const thumb = readThumbnail(raw);
   if (!thumb) return null;
   return encodeRgb(thumb.pixels, thumb.width, thumb.height, componentsX, componentsY);
-}
-
-export function version(): string {
-  return '1.0.0-SNAPSHOT';
 }

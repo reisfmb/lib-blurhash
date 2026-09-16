@@ -1,3 +1,4 @@
+// @ts-nocheck — local: upstream is not compiled under `strict`; see README.md.
 import { decode83 } from "./base83";
 import { sRGBToLinear, signPow, linearTosRGB } from "./utils";
 import { ValidationError } from "./error";

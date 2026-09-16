@@ -6,13 +6,12 @@
  * the decisions live in `content.ts` and this file stays as close to plumbing as it can.
  */
 
+import type { Content } from '/lib/xp/content';
 import { get as getContent, getAttachmentStream, modify } from '/lib/xp/content';
 import { run } from '/lib/xp/context';
 import { BlurhashData, dataNamespace, fingerprint, isStale } from './content';
 import { decodeRgb, encodeThumbnail, isValidHash } from './codec';
-
-/** Sampling size. Above this there is no detail left for at most 9 components. */
-const MAX_EDGE = 32;
+import { config } from './settings';
 
 /** Placeholder resolution. Fixed: `opts` chooses the shape, never the size. */
 const DECODE_EDGE = 32;
@@ -31,14 +30,10 @@ type ImageBean = {
   pngBase64Rgba: (rgba: number[], width: number, height: number) => string;
 };
 
-type ImageContent = {
-  _id: string;
-  _name: string;
-  type: string;
-  data: { media?: { attachment?: string } };
-  attachments: Record<string, { name: string; sha512?: string }>;
-  x: Record<string, Record<string, BlurhashData>>;
-};
+type ImageData = { media?: { attachment?: string } };
+
+/** `Content` with the data and `x` shapes narrowed to what a media:image carries for us. */
+type ImageContent = Content<ImageData> & { x: Record<string, Record<string, BlurhashData>> };
 
 function bean(): ImageBean {
   return __.newBean<ImageBean>('bre.lib.blurhash.ImageBean');
@@ -83,7 +78,7 @@ export function encode(contentId: string): string | null {
 
     // Null rather than a throw: an unreadable image (WebP has no ImageIO reader) is an
     // expected outcome, and the contract is "no placeholder", not "no page".
-    return encodeThumbnail(bean().rgbaThumbnail(stream, MAX_EDGE));
+    return hashOf(stream);
   });
 }
 
@@ -114,11 +109,11 @@ export function process(contentId: string): ProcessResult {
     const stream = getAttachmentStream({ key: content._id, name });
     if (!stream) return { status: 'skipped', reason: `no attachment "${name}"` };
 
-    const hash = encodeThumbnail(bean().rgbaThumbnail(stream, MAX_EDGE));
+    const hash = hashOf(stream);
     if (!hash) return { status: 'skipped', reason: 'unreadable image' };
 
     const source = fingerprint(sha512);
-    modify<ImageContent>({
+    modify<ImageData>({
       key: content._id,
       // A draft with an unfilled required field still deserves its hash; the mixin is ours
       // to complete, and the rest of the form is the editor's problem.
@@ -133,6 +128,16 @@ export function process(contentId: string): ProcessResult {
 
     return { status: 'written', hash };
   });
+}
+
+/**
+ * Attachment bytes -> hash, at the configured sampling size and component counts.
+ *
+ * Config is read here and nowhere else in this file, so the two callers cannot drift.
+ */
+function hashOf(stream: unknown): string | null {
+  const { componentsX, componentsY, maxEdge } = config();
+  return encodeThumbnail(bean().rgbaThumbnail(stream, maxEdge), componentsX, componentsY);
 }
 
 /**

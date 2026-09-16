@@ -7,12 +7,13 @@
 
 import { backfill } from './backfill-task';
 import { registerListener } from './events';
+import { config } from './settings';
 
 export type InstallOpts = {
-  /** Hash images as they are uploaded or replaced. Default true. */
+  /** Hash images as they are uploaded or replaced. Default: `blurhash.listener` in the app's .cfg, else true. */
   listener?: boolean;
 
-  /** Hash images that already exist, on application start. Default true. */
+  /** Hash images that already exist, on application start. Default: `blurhash.backfill` in the app's .cfg, else true. */
   backfill?: boolean;
 };
 
@@ -20,12 +21,20 @@ export type InstallOpts = {
  * Register the listener and start a backfill. Both are on unless switched off — either half
  * is useful alone, and the two together are what "hashes stay current" means.
  *
+ * Precedence: an explicit `opts` value, then the app's `.cfg`, then the default. Code wins
+ * over config because the argument is the consumer saying so at the call site; config is for
+ * operators who cannot redeploy.
+ *
  * Call this from the consuming app's `main.ts`. The library has no import side effects,
  * because XP gives each controller its own module instance — registering on import would
  * add a listener per controller (see `.claude/docs/findings/module-scope.md`).
  */
 export function install(opts?: InstallOpts): void {
-  if (!opts || opts.listener !== false) {
+  const settings = config();
+  const listener = opts && opts.listener !== undefined ? opts.listener : settings.listener;
+  const runBackfill = opts && opts.backfill !== undefined ? opts.backfill : settings.backfill;
+
+  if (listener) {
     attempt('register the event listener', () => {
       registerListener();
     });
@@ -33,7 +42,7 @@ export function install(opts?: InstallOpts): void {
 
   // On by default: a library that quietly leaves existing images unhashed is the more
   // surprising behaviour, and a repeat run is nearly free.
-  if (!opts || opts.backfill !== false) {
+  if (runBackfill) {
     attempt('start the backfill', () => {
       const taskId = backfill();
       log.info(`[blurhash] backfill started (task ${taskId})`);

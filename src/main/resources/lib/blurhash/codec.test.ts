@@ -112,6 +112,7 @@ describe('isValidHash', () => {
     ['empty string', ''],
     ['illegal character', 'L' + '/'.repeat(27)],
     ['wrong length for its size flag', 'LBGsX$2|]9tD-HJ-o1j]fQfQ'],
+    ['right length for 4×3 but claims 9×9', '|' + 'L'.repeat(27)],
     ['null', null],
     ['undefined', undefined],
     ['a number', 42],

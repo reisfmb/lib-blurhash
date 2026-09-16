@@ -16,5 +16,8 @@
     }
   },
   "include": ["./**/*.ts"],
-  "exclude": ["assets/**"]
+  // Tests are vitest's, checked by `vp test`; pulling vitest types into the XP config is the
+  // wrong direction. Vendored code is also imported, so `exclude` cannot skip it — see
+  // lib/blurhash/vendor/README.md for how that is handled.
+  "exclude": ["assets/**", "**/*.test.ts"]
 }
