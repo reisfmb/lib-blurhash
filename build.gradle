@@ -2,7 +2,6 @@ import com.github.gradle.node.pnpm.task.PnpmInstallTask
 import com.github.gradle.node.pnpm.task.PnpmTask
 
 plugins {
-    // `java` is only here for jar/processResources/components.java — there are no Java sources.
     id 'java'
     id 'maven-publish'
     id 'com.enonic.xp.base'
@@ -15,9 +14,16 @@ repositories {
     xp.enonicRepo('dev')
 }
 
-// A JS library bundles nothing: XP libs are provided by the consuming app, and types
-// come from the @enonic-types npm packages.
+// The JS side bundles nothing: XP libs are provided by the consuming app, and types come
+// from the @enonic-types npm packages. Java needs script-api only to compile against
+// (ScriptBean/BeanContext); XP provides it at runtime.
 dependencies {
+    compileOnly "com.enonic.xp:script-api:${xpVersion}"
+}
+
+// XP 8.1 ships Java 25 bytecode and refuses to resolve against anything older.
+tasks.named('compileJava') {
+    options.release = 25
 }
 
 // Download + pin Node + pnpm so the build is self-contained (clean checkout / CI).

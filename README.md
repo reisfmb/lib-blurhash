@@ -32,14 +32,14 @@ is the library's equivalent — apps consume it at build time via `include`.
 > `build/resources/main/**/*.js` before `vp pack` regenerates from `.ts`. The build still
 > succeeds — the file is just silently absent.
 
-## Iterating against a sandbox
+## Iterating against a running XP
 
 A library change only reaches a running XP through a consuming app, so the app rebuild in
 the middle is required — it is what re-merges the library:
 
 ```
 cd lib-blurhash    && ./gradlew publishToMavenLocal
-cd ../app-blurhash && XP_HOME=$HOME/.enonic/sandboxes/blurhash/home ./gradlew deploy
+cd ../app-blurhash && XP_HOME=/path/to/xp/home ./gradlew deploy
 ```
 
 If a library change appears not to land, Gradle resolved a cached SNAPSHOT — add
