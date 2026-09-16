@@ -14,6 +14,8 @@
     "@enonic-types/lib-content": "^8.0.4",
     "@enonic-types/lib-context": "^8.0.4",
     "@enonic-types/lib-event": "^8.0.4",
+    "@enonic-types/lib-project": "^8.0.4",
+    "@enonic-types/lib-task": "^8.0.4",
     "typescript": "^7.0.2",
     "vite": "npm:@voidzero-dev/vite-plus-core@0.2.9",
     "vite-plus": "0.2.9"

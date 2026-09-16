@@ -1,0 +1,3 @@
+kind: "Task"
+description: "Encode a BlurHash for every image that does not have a current one"
+form: []
