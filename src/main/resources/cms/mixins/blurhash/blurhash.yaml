@@ -1,0 +1,11 @@
+kind: "Mixin"
+title: "BlurHash"
+form:
+  - type: "TextLine"
+    name: "hash"
+    label: "BlurHash"
+    helpText: "Generated automatically — do not edit"
+  - type: "TextLine"
+    name: "source"
+    label: "Source fingerprint"
+    helpText: "Generated automatically — do not edit"
