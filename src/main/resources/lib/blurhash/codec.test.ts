@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { decodeRgb, encodeRgb, isValidHash } from './index';
+import { decodeRgb, encodeRgb, isValidHash } from './codec';
 
 /** A solid block of one colour, RGBA, alpha opaque — what the bean hands us. */
 function solid(width: number, height: number, r: number, g: number, b: number): number[] {
