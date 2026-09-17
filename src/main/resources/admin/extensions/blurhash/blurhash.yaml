@@ -1,0 +1,8 @@
+kind: "AdminExtension"
+title: "BlurHash"
+description: "Generate the BlurHash for this image on demand"
+# Only listed, and only served, for cms.admin (and system.admin). Other users never see it.
+allow:
+  - "role:cms.admin"
+interfaces:
+  - "contentstudio.contextpanel"

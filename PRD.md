@@ -51,7 +51,8 @@ of undoing it, so "why doesn't it handle X?" has an answer.
 | F4 | `decode(hash, opts?)` returns a PNG data URI at the requested aspect ratio, long edge fixed at 32 px. Malformed input returns `null`. |
 | F5 | `encode(contentId)` returns the hash without writing; `process(contentId)` encodes and writes, reporting `written`, `unchanged` or `skipped` with a reason. |
 | F6 | `init(opts?)`, called by the consumer from `main.ts`, registers the listener and starts the backfill. The library has no import side effects. |
-| F7 | `backfill(opts?)` is exported for a consumer who wants a button, a schedule or a widget. The library ships no HTTP endpoint. |
+| F7 | `backfill(opts?)` is exported for a consumer who wants a button or a schedule. The library ships no HTTP endpoint. |
+| F10 | A Content Studio context-panel widget, shipped by the library, lets a `cms.admin` generate the hash of the selected image by hand, for setups with the listener or backfill off. Inactive on anything but `media:image`. |
 | F8 | Configurable via the consuming app's `.cfg`: component counts, sampling size, listener and backfill on/off. Bad values warn and fall back to defaults. |
 | F9 | Unreadable images (no ImageIO reader, e.g. WebP) are `skipped`, not errors. |
 
@@ -137,7 +138,7 @@ harness webapp with one section per milestone, so a regression names the milesto
 | M5 | Backfill from `init()` as a task | Wiped hashes refill on restart |
 | M6 | Config from `.cfg`, hash validation, API freeze, README | Bad config warns and falls back |
 | M7 | Demo gallery and hero in `app-blurhash` | Blur-up visible under throttling |
-| M8 | Content Studio widget calling `backfill()` | Stretch |
+| M8 | Content Studio widget: hash one image on demand, cms.admin only | Button writes the hash; hidden on non-images |
 | M9 | Decode caching | Stretch, only with a measurement |
 
 M1 goes first because it is the riskiest: ImageIO finds codecs via `ServiceLoader`, which
@@ -162,7 +163,7 @@ repositories' git history.
 
 | | |
 | --- | --- |
-| Milestones completed | 8 out of 10 (M0–M7; M8 widget and M9 caching, both stretch, not started) |
+| Milestones completed | 9 out of 10 (M0–M8; M9 caching, stretch, not started) |
 | Sessions | 5 (1 brainstorm, 2 build, 2 wrap-up) |
 | Active session time | ~9 hours (gaps over 15 min excluded; ~14 hours wall clock) |
 | Human prompts | 117 |

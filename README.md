@@ -132,6 +132,18 @@ missing placeholder is never the reason an editor cannot save.
 
 **Logging.** Every line is prefixed `[blurhash]`. `init()` logs the backfill's task id.
 
+## Widget
+
+A Content Studio context-panel widget, **BlurHash**, ships with the library and appears under
+your app's key with nothing to register. Select an image and it shows the hash's state
+(`No hash yet`, `Up to date`, `Out of date`), the decoded placeholder, and a **Generate
+BlurHash** button that runs `process` on that one image, in draft. On anything that is not a
+`media:image` it only says so.
+
+It is for the setup where `blurhash.listener` or `blurhash.backfill` is off and hashes are
+made by hand. Visible to `role:cms.admin` (and `system.admin`) only: XP filters the extension
+list by the descriptor's `allow`, so other users never see it.
+
 ## API
 
 Frozen for v1; `averageColor` added after the freeze (additive, pure).
@@ -185,6 +197,7 @@ repository. The elevation is bounded: two fields, on `media:image`, in draft.
 | `src/main/resources/lib/blurhash/vendor/` | woltapp's codec, MIT, unmodified bar one `@ts-nocheck` |
 | `src/main/resources/cms/mixins/blurhash/` | Mixin schema; merges into the consuming app |
 | `src/main/resources/tasks/blurhash-backfill/` | Backfill task descriptor; merges into the consuming app |
+| `src/main/resources/admin/extensions/blurhash/` | Content Studio widget; merges into the consuming app |
 | `src/main/java/bre/lib/blurhash/ImageBean.java` | Attachment bytes → RGBA thumbnail; RGBA → PNG base64 |
 
 ```
