@@ -225,6 +225,3 @@ before `vp pack` regenerates from `.ts`. The build still succeeds — the file i
 **No npm dependencies at runtime.** There is no `node_modules` on XP, and the pack setting
 that inlines a dependency emits a root-level chunk that does not survive the merge. Vendor
 instead.
-
-The demo app's dev harness, one section per milestone, is at
-`http://localhost:8080/webapp/bre.app.blurhash/` once `app-blurhash` is deployed.

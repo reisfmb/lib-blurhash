@@ -116,7 +116,8 @@ const src = decode(image.x[ns].blurhash.hash, { width, height });
 
 `app-blurhash`: a site app with a gallery part and a hero part, each in a BlurHash variant and
 a plain variant, so the effect is visible side by side under devtools throttling. Plus a dev
-harness webapp with one section per milestone, so a regression names the milestone that broke.
+harness webapp with one section per milestone, so a regression names the milestone that broke;
+throwaway, removed once every milestone is verified.
 
 ## Success criteria
 

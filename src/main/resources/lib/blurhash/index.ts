@@ -19,5 +19,5 @@ export type { ProcessResult, ProcessStatus, DecodeOpts } from './xp';
 export { encodeRgb, decodeRgb, encodeThumbnail, isValidHash, averageColor } from './codec';
 export { DEFAULT_COMPONENTS_X, DEFAULT_COMPONENTS_Y } from './codec';
 
-// Frozen at M6. `readThumbnail` and `settings.config()` are reachable by path for our own
-// harness, but are not part of the surface a consumer may rely on.
+// Frozen at M6. `xp.ts`, `content.ts` and friends are reachable by path for the library's own
+// widget, but are not part of the surface a consumer may rely on.
