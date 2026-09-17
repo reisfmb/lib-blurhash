@@ -8,8 +8,8 @@
 
 // XP-facing: read, store, render.
 export { encode, process, decode } from './xp';
-export { install } from './install';
-export type { InstallOpts } from './install';
+export { init } from './init';
+export type { InitOpts } from './init';
 export { backfill } from './backfill-task';
 export type { BackfillOpts } from './backfill-task';
 export type { BackfillSummary } from './backfill';

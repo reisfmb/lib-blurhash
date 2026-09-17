@@ -37,14 +37,14 @@ mixins:
     allowContentTypes: "media:image"
 ```
 
-**3. Call `install()` from `main.ts`.** This registers the upload listener and starts a
+**3. Call `init()` from `main.ts`.** This registers the upload listener and starts a
 backfill of existing images. The library does nothing on import — XP gives each controller
 its own module instance, so registering on import would add one listener per controller.
 
 ```ts
-import { install } from '/lib/blurhash';
+import { init } from '/lib/blurhash';
 
-install();
+init();
 ```
 
 **4. GraalJS only.** Set `scriptEngine = 'GraalJS'` in your app's `build.gradle`. The emitted
@@ -98,10 +98,10 @@ no bundle of its own.
 | `blurhash.componentsX` | `4` | 1–9 | horizontal components |
 | `blurhash.componentsY` | `3` | 1–9 | vertical components |
 | `blurhash.maxEdge` | `32` | 8–256 | sampling size: the thumbnail's long edge |
-| `blurhash.listener` | `true` | `true`/`false` | register the upload listener from `install()` |
-| `blurhash.backfill` | `true` | `true`/`false` | run a backfill from `install()` |
+| `blurhash.listener` | `true` | `true`/`false` | register the upload listener from `init()` |
+| `blurhash.backfill` | `true` | `true`/`false` | run a backfill from `init()` |
 
-**Precedence:** an explicit `install({ listener, backfill })` argument, then the `.cfg`, then
+**Precedence:** an explicit `init({ listener, backfill })` argument, then the `.cfg`, then
 the default. Code wins over config.
 
 **Bad values** log a warning and fall back to the default. Booleans are exactly `true` or
@@ -120,7 +120,7 @@ site is connected to your app. Reads the content, compares `source` with the cur
 `sha512`, and writes only when they differ. The library's own write re-fires the event; the
 second pass matches and stops. Never writes to `master` — publishing is the editor's.
 
-**Backfill.** Runs as an XP task from `install()`, on every application start. Discovers
+**Backfill.** Runs as an XP task from `init()`, on every application start. Discovers
 repositories from `projectLib.list()` plus each project's sites; `backfill({ repositories })`
 overrides that. Batches of 20, `taskLib.progress` per batch, one summary log line per
 repository. A run where everything is current does no writes, so restarting is cheap and is
@@ -130,7 +130,7 @@ also the recovery path — a task that dies halfway just runs again next start.
 `media:image`, no attachment, or `unreadable image` (WebP — see below). Nothing throws; a
 missing placeholder is never the reason an editor cannot save.
 
-**Logging.** Every line is prefixed `[blurhash]`. `install()` logs the backfill's task id.
+**Logging.** Every line is prefixed `[blurhash]`. `init()` logs the backfill's task id.
 
 ## API
 
@@ -138,7 +138,7 @@ Frozen for v1; `averageColor` added after the freeze (additive, pure).
 
 ```ts
 // XP
-install(opts?: InstallOpts): void
+init(opts?: InitOpts): void
 backfill(opts?: BackfillOpts): string          // task id
 encode(contentId: string): string | null      // hash, no write
 process(contentId: string): ProcessResult     // hash + write to the mixin, in draft
@@ -153,7 +153,7 @@ averageColor(hash: unknown): string | null     // '#rrggbb' from the hash's DC t
 DEFAULT_COMPONENTS_X, DEFAULT_COMPONENTS_Y
 
 // Types
-InstallOpts = { listener?: boolean; backfill?: boolean }
+InitOpts = { listener?: boolean; backfill?: boolean }
 BackfillOpts = { repositories?: string[] }
 DecodeOpts = { width?: number; height?: number }
 ProcessResult = { status: 'written' | 'unchanged' | 'skipped'; hash?: string; reason?: string }
@@ -169,7 +169,7 @@ repository. The elevation is bounded: two fields, on `media:image`, in draft.
   `int[]` as something without `.slice`. Both were hit; neither is fixed in v1.
 - **WebP gets no hash.** Stock `ImageIO` has no WebP reader; `process` reports `skipped`.
   JPEG, PNG, GIF and TIFF work.
-- **Not cluster-aware.** Every node runs `install()`, so every node backfills. Identical
+- **Not cluster-aware.** Every node runs `init()`, so every node backfills. Identical
   hashes, so duplicated work rather than corruption.
 - **Config changes are not retroactive** — see [Config](#config).
 - **EXIF orientation is ignored**; a rotated photo gets a rotated blur.

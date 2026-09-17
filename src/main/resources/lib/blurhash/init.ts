@@ -9,7 +9,7 @@ import { backfill } from './backfill-task';
 import { registerListener } from './events';
 import { config } from './settings';
 
-export type InstallOpts = {
+export type InitOpts = {
   /** Hash images as they are uploaded or replaced. Default: `blurhash.listener` in the app's .cfg, else true. */
   listener?: boolean;
 
@@ -29,7 +29,7 @@ export type InstallOpts = {
  * because XP gives each controller its own module instance — registering on import would
  * add a listener per controller (see `.claude/docs/findings/module-scope.md`).
  */
-export function install(opts?: InstallOpts): void {
+export function init(opts?: InitOpts): void {
   const settings = config();
   const listener = opts && opts.listener !== undefined ? opts.listener : settings.listener;
   const runBackfill = opts && opts.backfill !== undefined ? opts.backfill : settings.backfill;
@@ -51,10 +51,10 @@ export function install(opts?: InstallOpts): void {
 }
 
 /**
- * Neither half of install() may take down the caller.
+ * Neither half of init() may take down the caller.
  *
  * `main.js` is also what XP's script test harness executes, and that harness provides no
- * event or task service — so an unguarded `install()` fails a consumer's test suite for
+ * event or task service — so an unguarded `init()` fails a consumer's test suite for
  * reasons that have nothing to do with the consumer. The same applies to any environment
  * where a service is missing: the library should degrade to "no hashes", not to "no app".
  *

@@ -30,17 +30,17 @@ type NodeEvent = { type: string; data: { nodes?: EventNode[] } };
  * it, each one hashing the same upload. Observed during M4, not theorised.
  *
  * What makes it once per app is the call site — `main.js` runs exactly once when the
- * application starts, and that is the only place `install()` belongs.
+ * application starts, and that is the only place `init()` belongs.
  */
-let installed = false;
+let registered = false;
 
 /**
- * Start listening for image changes. Called by `install()`, which is the consumer's entry
+ * Start listening for image changes. Called by `init()`, which is the consumer's entry
  * point — registering from a controller would add one listener per controller instance.
  */
 export function registerListener(): void {
-  if (installed) return;
-  installed = true;
+  if (registered) return;
+  registered = true;
 
   listener<NodeEvent['data']>({
     type: '(node.created|node.updated)',
@@ -54,7 +54,7 @@ export function registerListener(): void {
 /**
  * Answers for repositories we have already looked at.
  *
- * Safe as module state because the listener is registered exactly once, from `install()`.
+ * Safe as module state because the listener is registered exactly once, from `init()`.
  * Without it every upload would re-query for sites; with it the cost is one query per
  * repository per application start.
  */
@@ -65,7 +65,7 @@ const relevantRepos: Record<string, boolean> = {};
  *
  * Needed because events arrive from *every* content repository, including projects that
  * never registered our mixin. Writing there is refused by XP ("Not allowed mixinName"), so
- * without this check a second installed app turns every upload into a logged failure.
+ * without this check a second registered app turns every upload into a logged failure.
  */
 function isRelevant(repo: string): boolean {
   if (relevantRepos[repo] === undefined) {

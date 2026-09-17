@@ -6,7 +6,7 @@
  * The listener keeps new uploads current; this is for everything that was there before the
  * library was installed — which, on a real installation, is all of it.
  *
- * Runs as a task from `install()`. There is no endpoint, so there is no caller to
+ * Runs as a task from `init()`. There is no endpoint, so there is no caller to
  * authenticate: the work starts at application startup in a system context.
  */
 

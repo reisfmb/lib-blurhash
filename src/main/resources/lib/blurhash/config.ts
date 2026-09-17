@@ -16,9 +16,9 @@ export type Config = {
   componentsY: number;
   /** Sampling size: the thumbnail's long edge, 8–256. */
   maxEdge: number;
-  /** Register the upload listener from `install()`. */
+  /** Register the upload listener from `init()`. */
   listener: boolean;
-  /** Run a backfill from `install()`. */
+  /** Run a backfill from `init()`. */
   backfill: boolean;
 };
 
