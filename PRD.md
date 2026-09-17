@@ -164,19 +164,22 @@ repositories' git history.
 | | |
 | --- | --- |
 | Milestones completed | 9 out of 10 (M0–M8; M9 caching, stretch, not started) |
-| Sessions | 5 (1 brainstorm, 2 build, 2 wrap-up) |
-| Active session time | ~9 hours (gaps over 15 min excluded; ~14 hours wall clock) |
-| Human prompts | 117 |
-| API calls | 654 |
-| Token usage | 114M input / 0.60M output |
-| of which uncached input | 1.45M |
-| Models | Claude Opus 5 (brainstorm, M0–M2), Claude Fable 5.1 (M3–M7, wrap-up) |
-| Commits | 24 (11 lib, 13 app) |
-| Files changed | 98 (49 lib, 49 app) |
+| Sessions | 5 (1 brainstorm, 2 build, 2 follow-up) |
+| Active session time | ~10 hours (gaps over 15 min excluded; ~16 hours wall clock) |
+| Human prompts | 130 |
+| API calls | 710 |
+| Token usage | 123M input / 0.66M output |
+| of which uncached input | 1.65M |
+| Models | Claude Opus 5 (brainstorm, M0–M2), Claude Fable 5.1 (M3–M8, follow-up) |
+| Commits | 27 (12 lib, 15 app) |
+| Files changed | 101 (52 lib, 49 app) |
 | Unit tests | 116, pure layer only |
 
 How it was used: the idea was discussed and challenged before any code; the plan, spikes and
 findings were written as working notes under `.claude/docs`, then discarded once they had done
 their job. Riskiest work first (Java/OSGi bridge), each milestone left the repo in a runnable,
 deployed state, and the human did the Content Studio verification and the gallery styling
-decisions. Extras beyond the plan: `averageColor` from the hash's DC term, and the hero part.
+decisions. Extras beyond the plan: `averageColor` from the hash's DC term, the hero part, and
+the widget scoped to one image instead of a project backfill. One reversal: a client-side
+"reveal after decode" fade was built, then removed in favour of the browser's native
+partial paint over the placeholder.
