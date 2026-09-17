@@ -88,6 +88,39 @@ always 32 px: the result is blur, the browser scales it for free, and decode cos
 output pixels (~5.5 µs/px). `{width: 4, height: 3}` and `{width: 1200, height: 900}` return
 the same image.
 
+## Guillotine
+
+Headless frontends get the hash one field away. Add one file to your app:
+
+```ts
+// src/main/resources/guillotine/guillotine.ts
+import { guillotineExtensions } from '/lib/blurhash';
+
+export const extensions = guillotineExtensions;
+```
+
+`media_Image` gains a `blurhash` field, `null` until the image has a valid hash:
+
+```graphql
+{
+  guillotine {
+    get(key: "<image id>") {
+      ... on media_Image {
+        blurhash {
+          hash                                 # decode client-side with the blurhash package
+          color                                # '#rrggbb', no decoding
+          placeholder(width: 16, height: 9)    # PNG data URI; args set the aspect ratio only
+        }
+      }
+    }
+  }
+}
+```
+
+The library does not ship `guillotine/guillotine.js` itself: it is a single app-level path, like
+`cms/cms.yaml`, and a merge would silently pick one file. If you already have extensions, spread
+`guillotineExtensions(graphQL)` into yours.
+
 ## Config
 
 Optional. Keys go in **your app's** `.cfg` (`$XP_HOME/config/<app.key>.cfg`) — the library has
@@ -162,6 +195,7 @@ decodeRgb(hash, width, height, punch?): Uint8ClampedArray | null
 encodeThumbnail(raw, componentsX?, componentsY?): string | null
 isValidHash(value: unknown): value is string
 averageColor(hash: unknown): string | null     // '#rrggbb' from the hash's DC term; no pixels decoded
+guillotineExtensions(graphQL): Extensions    // Guillotine: `media_Image.blurhash { hash color placeholder }`
 DEFAULT_COMPONENTS_X, DEFAULT_COMPONENTS_Y
 
 // Types

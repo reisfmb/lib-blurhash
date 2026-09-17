@@ -156,31 +156,15 @@ OSGi tends to break. If it fails, the split is wrong and everything after it is 
 | Vendored ES2023 JS runs on the consumer's script engine | M2 | Downlevel, or declare GraalJS-only |
 | `projectLib.list()` from a startup context | M5 | Consumer passes `repositories` |
 
-## Appendix: AI usage
+## Beyond the plan
 
-The library and demo app were built in pair with Claude Code over two calendar days,
-2026-09-16 to 2026-09-17. Figures below come from the local session transcripts and both
-repositories' git history.
+Delivered on top of the milestones above:
 
-| | |
-| --- | --- |
-| Milestones completed | 9 out of 10 (M0–M8; M9 caching, stretch, not started) |
-| Sessions | 5 (1 brainstorm, 2 build, 2 follow-up) |
-| Active session time | ~10 hours (gaps over 15 min excluded; ~16 hours wall clock) |
-| Human prompts | 130 |
-| API calls | 710 |
-| Token usage | 123M input / 0.66M output |
-| of which uncached input | 1.65M |
-| Models | Claude Opus 5 (brainstorm, M0–M2), Claude Fable 5.1 (M3–M8, follow-up) |
-| Commits | 27 (12 lib, 15 app) |
-| Files changed | 101 (52 lib, 49 app) |
-| Unit tests | 116, pure layer only |
-
-How it was used: the idea was discussed and challenged before any code; the plan, spikes and
-findings were written as working notes under `.claude/docs`, then discarded once they had done
-their job. Riskiest work first (Java/OSGi bridge), each milestone left the repo in a runnable,
-deployed state, and the human did the Content Studio verification and the gallery styling
-decisions. Extras beyond the plan: `averageColor` from the hash's DC term, the hero part, and
-the widget scoped to one image instead of a project backfill. One reversal: a client-side
-"reveal after decode" fade was built, then removed in favour of the browser's native
-partial paint over the placeholder.
+- `averageColor(hash)`: the image's average colour as `#rrggbb`, read from the hash's DC term
+  without decoding any pixels. Used for borders, backgrounds and text contrast.
+- A hero part in the demo app, next to the gallery, with the section background in the
+  image's colour.
+- The Content Studio widget scoped to one image on demand (M8), rather than a project-wide
+  backfill button.
+- A Guillotine extension, `media_Image.blurhash { hash color placeholder }`, so headless
+  frontends get the hash one field away.
